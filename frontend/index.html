@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>智能客服 Agent</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h1>会话</h1>
+          <button id="newThreadButton" type="button">新建</button>
+        </div>
+        <div id="threadList" class="thread-list"></div>
+      </aside>
+
+      <section class="chat-shell">
+        <section id="messages" class="messages" aria-live="polite">
+          <div class="message assistant">你好，我是智能客服 Agent，请输入你的问题。</div>
+        </section>
+        <form id="chatForm" class="composer">
+          <input id="messageInput" type="text" autocomplete="off" placeholder="请输入问题" />
+          <button type="submit">发送</button>
+        </form>
+      </section>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>

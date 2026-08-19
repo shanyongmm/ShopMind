@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1600" viewBox="0 0 1800 1600">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#d7dee8" flood-opacity="0.55"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#39485c"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5f9df7"/>
+    </marker>
+    <style>
+      .bg { fill: #f7f9fc; }
+      .title { font: 38px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #172033; font-weight: 650; }
+      .subtitle { font: 18px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #6b7789; font-weight: 500; }
+      .node-title { font: 24px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #263244; font-weight: 650; }
+      .node-sub { font: 16px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #5f6f83; font-weight: 520; }
+      .label { font: 16px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #536274; font-weight: 600; }
+      .tiny { font: 14px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #718096; font-weight: 500; }
+      .box { fill: #ffffff; stroke: #cbd6e2; stroke-width: 2.2; filter: url(#shadow); }
+      .start-end { fill: #edf6ff; stroke: #5f9df7; stroke-width: 2.4; filter: url(#shadow); }
+      .diamond { fill: #fff7ed; stroke: #ff9b45; stroke-width: 2.4; filter: url(#shadow); }
+      .blue-card { fill: #eef6ff; stroke: #5f9df7; stroke-width: 2.2; filter: url(#shadow); }
+      .green-card { fill: #f0fff8; stroke: #25c99a; stroke-width: 2.2; filter: url(#shadow); }
+      .purple-card { fill: #f5f0ff; stroke: #a684ff; stroke-width: 2.2; filter: url(#shadow); }
+      .orange-card { fill: #fff4ec; stroke: #ff914d; stroke-width: 2.2; filter: url(#shadow); }
+      .pink-card { fill: #fff1f4; stroke: #ff6f8a; stroke-width: 2.2; filter: url(#shadow); }
+      .inner-blue { fill: #f7fbff; stroke: #7ab2ff; stroke-width: 2; }
+      .inner-green { fill: #f6fff9; stroke: #29c994; stroke-width: 2; }
+      .inner-purple { fill: #faf7ff; stroke: #a684ff; stroke-width: 2; }
+      .inner-orange { fill: #fff8f2; stroke: #ff914d; stroke-width: 2; }
+      .line { fill: none; stroke: #39485c; stroke-width: 2.4; marker-end: url(#arrow); }
+      .thin-line { fill: none; stroke: #54657a; stroke-width: 1.9; marker-end: url(#arrow); }
+      .dashed { fill: none; stroke: #718096; stroke-width: 2.4; stroke-dasharray: 9 9; marker-end: url(#arrow); }
+      .dashed-no-arrow { fill: none; stroke: #718096; stroke-width: 2.4; stroke-dasharray: 9 9; }
+      .tool-dash { fill: none; stroke: #8a98aa; stroke-width: 2; stroke-dasharray: 6 8; marker-end: url(#arrow); }
+      .soft-band { fill: #ffffff; stroke: #d6dee8; stroke-width: 2; filter: url(#shadow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1600"/>
+
+  <text class="title" x="900" y="62" text-anchor="middle">LangGraph 多 Agent 智能客服架构图</text>
+  <text class="subtitle" x="900" y="96" text-anchor="middle">任务规划、Agent 路由、RAG 工具化与 Spring Boot 电商接口占位统一由状态和条件边控制</text>
+
+  <!-- Main vertical flow -->
+  <circle class="start-end" cx="900" cy="160" r="48"/>
+  <text class="node-title" x="900" y="168" text-anchor="middle">开始</text>
+
+  <path class="line" d="M900 208 L900 238"/>
+  <rect class="box" x="735" y="238" width="330" height="84" rx="14"/>
+  <text class="node-title" x="900" y="274" text-anchor="middle">接收用户问题</text>
+  <text class="node-sub" x="900" y="300" text-anchor="middle">messages / question</text>
+
+  <path class="line" d="M900 322 L900 356"/>
+  <rect class="box" x="705" y="356" width="390" height="94" rx="14"/>
+  <text class="node-title" x="900" y="394" text-anchor="middle">问题理解与状态初始化</text>
+  <text class="node-sub" x="900" y="422" text-anchor="middle">意图、约束、上下文、历史摘要</text>
+
+  <path class="line" d="M900 450 L900 492"/>
+  <rect class="orange-card" x="660" y="492" width="480" height="112" rx="16"/>
+  <text class="node-title" x="900" y="532" text-anchor="middle">任务规划 plan_node</text>
+  <text class="node-sub" x="900" y="560" text-anchor="middle">生成 2-3 步任务清单 / 写入 plan_steps</text>
+  <text class="tiny" x="900" y="586" text-anchor="middle">后续 Agent 执行时优先参照该清单</text>
+
+  <path class="line" d="M900 604 L900 642"/>
+  <polygon class="diamond" points="900,642 1096,735 900,828 704,735"/>
+  <text class="node-title" x="900" y="720" text-anchor="middle">路由判断 route_node</text>
+  <text class="node-sub" x="900" y="750" text-anchor="middle">direct_agent / product / order / after_sales / clarify</text>
+
+  <!-- Clarify loop -->
+  <path class="thin-line" d="M704 735 C520 735 470 670 368 670"/>
+  <text class="label" x="510" y="705" text-anchor="middle">clarify</text>
+  <rect class="pink-card" x="72" y="628" width="296" height="92" rx="12"/>
+  <text class="node-title" x="220" y="668" text-anchor="middle">追问澄清节点</text>
+  <text class="node-sub" x="220" y="696" text-anchor="middle">信息不足 / 目标不明确</text>
+  <path class="dashed" d="M220 628 L220 280 L735 280"/>
+  <text class="tiny" x="103" y="314">用户补充后回到输入</text>
+
+  <!-- Agent cards -->
+  <path class="thin-line" d="M788 790 C660 862 536 852 344 862"/>
+  <text class="label" x="600" y="842" text-anchor="middle">direct_agent</text>
+  <rect class="blue-card" x="70" y="848" width="320" height="242" rx="18"/>
+  <text class="node-title" x="230" y="890" text-anchor="middle">直接回答 Agent</text>
+  <text class="node-sub" x="230" y="918" text-anchor="middle">简单问题 / 无需外部业务事实</text>
+  <rect class="inner-blue" x="112" y="948" width="236" height="44" rx="8"/>
+  <text class="label" x="230" y="976" text-anchor="middle">读取 plan_steps</text>
+  <rect class="inner-green" x="112" y="1008" width="236" height="44" rx="8"/>
+  <text class="label" x="230" y="1036" text-anchor="middle">必要时调用 RAG Tool</text>
+  <rect class="inner-blue" x="112" y="1068" width="236" height="44" rx="8"/>
+  <text class="label" x="230" y="1096" text-anchor="middle">生成候选答案</text>
+
+  <path class="thin-line" d="M852 816 C760 878 670 850 596 862"/>
+  <text class="label" x="688" y="842" text-anchor="middle">product</text>
+  <rect class="green-card" x="450" y="848" width="320" height="242" rx="18"/>
+  <text class="node-title" x="610" y="890" text-anchor="middle">商品咨询 Agent</text>
+  <text class="node-sub" x="610" y="918" text-anchor="middle">商品推荐 / 规格 / 库存 / 价格</text>
+  <rect class="inner-green" x="492" y="948" width="236" height="44" rx="8"/>
+  <text class="label" x="610" y="976" text-anchor="middle">RAG Tool：商品知识</text>
+  <rect class="inner-purple" x="492" y="1008" width="236" height="44" rx="8"/>
+  <text class="label" x="610" y="1036" text-anchor="middle">商品 Java 接口 TODO</text>
+  <rect class="inner-green" x="492" y="1068" width="236" height="44" rx="8"/>
+  <text class="label" x="610" y="1096" text-anchor="middle">返回商品解释与建议</text>
+
+  <path class="thin-line" d="M948 816 C982 852 998 852 1030 862"/>
+  <text class="label" x="1018" y="842" text-anchor="middle">order</text>
+  <rect class="purple-card" x="830" y="848" width="320" height="242" rx="18"/>
+  <text class="node-title" x="990" y="890" text-anchor="middle">订单 Agent</text>
+  <text class="node-sub" x="990" y="918" text-anchor="middle">订单状态 / 支付 / 物流</text>
+  <rect class="inner-purple" x="872" y="948" width="236" height="44" rx="8"/>
+  <text class="label" x="990" y="976" text-anchor="middle">订单 Java 接口 TODO</text>
+  <rect class="inner-purple" x="872" y="1008" width="236" height="44" rx="8"/>
+  <text class="label" x="990" y="1036" text-anchor="middle">物流 / 支付接口 TODO</text>
+  <rect class="inner-green" x="872" y="1068" width="236" height="44" rx="8"/>
+  <text class="label" x="990" y="1096" text-anchor="middle">返回 observations</text>
+
+  <path class="thin-line" d="M1012 790 C1145 858 1246 852 1410 862"/>
+  <text class="label" x="1208" y="842" text-anchor="middle">after_sales</text>
+  <rect class="orange-card" x="1210" y="848" width="320" height="242" rx="18"/>
+  <text class="node-title" x="1370" y="890" text-anchor="middle">售后 Agent</text>
+  <text class="node-sub" x="1370" y="918" text-anchor="middle">退款 / 退换货 / 售后进度</text>
+  <rect class="inner-orange" x="1252" y="948" width="236" height="44" rx="8"/>
+  <text class="label" x="1370" y="976" text-anchor="middle">售后 Java 接口 TODO</text>
+  <rect class="inner-green" x="1252" y="1008" width="236" height="44" rx="8"/>
+  <text class="label" x="1370" y="1036" text-anchor="middle">政策可调用 RAG Tool</text>
+  <rect class="inner-orange" x="1252" y="1068" width="236" height="44" rx="8"/>
+  <text class="label" x="1370" y="1096" text-anchor="middle">返回处理建议</text>
+
+  <!-- Shared tool layer -->
+  <rect class="soft-band" x="418" y="1140" width="964" height="122" rx="18"/>
+  <text class="node-title" x="900" y="1176" text-anchor="middle">共享工具层</text>
+  <rect class="inner-green" x="472" y="1198" width="250" height="44" rx="8"/>
+  <text class="label" x="597" y="1226" text-anchor="middle">RAG Tool：知识库检索</text>
+  <rect class="inner-purple" x="775" y="1198" width="250" height="44" rx="8"/>
+  <text class="label" x="900" y="1226" text-anchor="middle">商品 / 订单接口 TODO</text>
+  <rect class="inner-orange" x="1078" y="1198" width="250" height="44" rx="8"/>
+  <text class="label" x="1203" y="1226" text-anchor="middle">售后接口 TODO</text>
+
+  <path class="tool-dash" d="M230 1090 C230 1160 390 1164 472 1218"/>
+  <path class="tool-dash" d="M610 1090 L610 1198"/>
+  <path class="tool-dash" d="M990 1090 L990 1198"/>
+  <path class="tool-dash" d="M1370 1090 C1370 1160 1318 1168 1220 1198"/>
+  <text class="tiny" x="1580" y="1158">Agent 按计划调用工具</text>
+
+  <!-- Answer and quality -->
+  <path class="line" d="M900 1262 L900 1302"/>
+  <rect class="box" x="645" y="1302" width="510" height="88" rx="14"/>
+  <text class="node-title" x="900" y="1338" text-anchor="middle">答案生成与整合</text>
+  <text class="node-sub" x="900" y="1366" text-anchor="middle">融合计划、Agent 结果、工具 observations、引用与格式</text>
+
+  <path class="line" d="M900 1390 L900 1422"/>
+  <polygon class="diamond" points="900,1422 1064,1490 900,1558 736,1490"/>
+  <text class="node-title" x="900" y="1484" text-anchor="middle">质量校验</text>
+  <text class="node-sub" x="900" y="1510" text-anchor="middle">可靠 / 完整 / 可追溯</text>
+
+  <path class="line" d="M1064 1490 L1198 1490"/>
+  <text class="label" x="1132" y="1466" text-anchor="middle">通过</text>
+  <circle class="start-end" cx="1260" cy="1490" r="48"/>
+  <text class="node-title" x="1260" y="1498" text-anchor="middle">结束</text>
+
+  <!-- Rework path -->
+  <path class="dashed-no-arrow" d="M736 1490 L520 1490 L520 1288 L1565 1288 L1565 735 L1096 735"/>
+  <path class="dashed" d="M736 1490 L520 1490 L520 1288"/>
+  <text class="tiny" x="1270" y="1318">返工：优先读取 revision_suggestion 回到 last_agent</text>
+  <text class="tiny" x="1268" y="1342">多次失败再回 plan_node 重新规划</text>
+
+  <!-- Outer note -->
+  <rect class="dashed-no-arrow" x="34" y="210" width="1702" height="1350" rx="8"/>
+  <text class="tiny" x="1520" y="1450">失败：定向修正 / 工具重试 / 澄清</text>
+</svg>

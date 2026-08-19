@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+pydantic-settings
+langchain
+langchain-openai
+langchain-community
+langgraph
+langgraph-checkpoint-postgres
+pymilvus
+dashscope
+requests
+psycopg[binary]
