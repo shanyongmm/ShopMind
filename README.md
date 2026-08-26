@@ -4,6 +4,25 @@
 
 ![架构图](./langgraph_agent_architecture.svg)
 
+## 演示流程
+- 存在分级会话，相互不影响，采用短期记忆持久化存储
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+
+
+- 根据实际的业务获取真实数据，以及将复杂问题拆解成任务规划，多agent协调
+![img_4.png](img_4.png)
+![img_5.png](img_5.png)
+
+    任务规划
+    ![img_6.png](img_6.png)
+
+    多agent协调
+    ![img_7.png](img_7.png)
+
+    通过外部客户端获取真实数据
+    ![img_8.png](img_8.png)
+
 ## 项目亮点
 
 - 多阶段工作流：问题规划、任务分发、专职 Agent 执行、答案汇总、质量评估与回修
