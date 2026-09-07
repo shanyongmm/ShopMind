@@ -3,7 +3,7 @@ from typing import Any
 
 import requests
 
-from ..config import get_settings
+from ..core.config import get_settings
 
 
 logger = logging.getLogger(__name__)
@@ -43,11 +43,14 @@ class JavaApiClient:
             response.raise_for_status()
         except requests.Timeout as exc:
             logger.warning("java api timeout method=%s url=%s", method, url)
-            raise JavaApiError("Java interface request timed out") from exc
+            raise JavaApiError(f"Java interface request timed out: {method} {url}") from exc
         except requests.RequestException as exc:
             status_code = exc.response.status_code if exc.response is not None else None
             logger.exception("java api request failed method=%s url=%s status=%s", method, url, status_code)
-            raise JavaApiError("Java interface request failed", status_code=status_code) from exc
+            raise JavaApiError(
+                f"Java interface request failed: {method} {url}; reason={exc}",
+                status_code=status_code,
+            ) from exc
 
         try:
             payload = response.json()
@@ -55,6 +58,7 @@ class JavaApiClient:
             logger.exception("java api returned non-json response method=%s url=%s", method, url)
             raise JavaApiError("Java interface returned non-json data", status_code=response.status_code) from exc
 
+        logger.info("java api request succeeded method=%s url=%s status=%s", method, url, response.status_code)
         return payload
 
     def get(self, path: str, params: dict[str, Any] | None = None) -> Any:

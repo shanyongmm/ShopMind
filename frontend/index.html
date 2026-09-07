@@ -3,29 +3,73 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>智能客服 Agent</title>
+    <title>ShopMind 智能客服</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <main class="app-shell">
-      <aside class="sidebar">
+      <aside class="sidebar" aria-label="会话列表">
         <div class="sidebar-header">
-          <h1>会话</h1>
-          <button id="newThreadButton" type="button">新建</button>
+          <div>
+            <p class="section-kicker">ShopMind</p>
+            <h1>会话</h1>
+          </div>
+          <button id="newThreadButton" class="icon-button" type="button" title="新建会话" aria-label="新建会话">
+            <span aria-hidden="true">+</span>
+          </button>
         </div>
-        <div id="threadList" class="thread-list"></div>
+
+        <label class="thread-search">
+          <span aria-hidden="true">⌕</span>
+          <input id="threadSearchInput" type="search" placeholder="搜索会话" autocomplete="off" />
+        </label>
+
+        <nav id="threadList" class="thread-list" aria-label="历史会话"></nav>
       </aside>
 
-      <section class="chat-shell">
-        <section id="messages" class="messages" aria-live="polite">
-          <div class="message assistant">你好，我是智能客服 Agent，请输入你的问题。</div>
-        </section>
-        <form id="chatForm" class="composer">
-          <input id="messageInput" type="text" autocomplete="off" placeholder="请输入问题" />
-          <button type="submit">发送</button>
-        </form>
+      <section class="chat-shell" aria-label="智能客服">
+        <header class="chat-header">
+          <div>
+            <p class="section-kicker">多 Agent 客服</p>
+            <h2>智能交易助手</h2>
+          </div>
+          <div id="connectionStatus" class="connection-status" data-state="idle" aria-live="polite">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-text">待连接</span>
+          </div>
+        </header>
+
+        <section id="messages" class="messages" aria-live="polite" aria-label="对话消息"></section>
+
+        <div class="composer-wrap">
+          <div class="quick-actions" aria-label="快捷问题">
+            <button
+              id="javaTriggerButton"
+              class="quick-action"
+              type="button"
+              data-message="最近热门的商品有什么？"
+            >
+              热门商品
+            </button>
+          </div>
+
+          <form id="chatForm" class="composer">
+            <textarea
+              id="messageInput"
+              rows="1"
+              placeholder="输入客户问题"
+              autocomplete="off"
+              spellcheck="false"
+            ></textarea>
+            <button id="submitButton" class="send-button" type="submit" title="发送" aria-label="发送">
+              <span aria-hidden="true">↵</span>
+              <span>发送</span>
+            </button>
+          </form>
+        </div>
       </section>
     </main>
+
     <script src="./script.js"></script>
   </body>
 </html>

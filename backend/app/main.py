@@ -1,15 +1,17 @@
 import json
 import logging
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
-from .config import get_settings
-from .graph import _graph_config, ask_agent, graph, stream_agent_events
-from .logging_config import configure_logging
-from .memory import close_postgres_checkpointer
-from .schemas import ChatMessage, ChatRequest, ChatResponse, ThreadDetail, ThreadSummary
+from .api.schemas import ChatMessage, ChatRequest, ChatResponse, ThreadDetail, ThreadSummary
+from .core.cache import close_redis_cache, get_redis_health
+from .core.config import get_settings
+from .core.logging_config import configure_logging
+from .core.memory import close_postgres_checkpointer
+from .mcp_service.client import list_mcp_call_logs
+from .workflow.graph import _graph_config, ask_agent, graph, stream_agent_events
 from .services.thread_store import delete_thread, get_thread, list_threads, setup_thread_store, upsert_thread
 
 
@@ -35,6 +37,7 @@ def startup() -> None:
 @app.on_event("shutdown")
 def shutdown() -> None:
     close_postgres_checkpointer()
+    close_redis_cache()
 
 
 @app.get("/", include_in_schema=False)
@@ -53,9 +56,28 @@ def _serialize_sources(sources: list) -> list[dict]:
         if hasattr(source, "model_dump"):
             serialized.append(source.model_dump())
         elif isinstance(source, dict):
-            serialized.append(source)
+            if "source_type" not in source:
+                serialized.append(
+                    {
+                        "source_type": "unknown",
+                        "source_name": source.get("source_name"),
+                        "source_content": source.get("source_content") or str(source),
+                        "relevance_score": source.get("relevance_score"),
+                        "timestamp": source.get("timestamp"),
+                    }
+                )
+            else:
+                serialized.append(source)
         else:
-            serialized.append({"source_content": str(source)})
+            serialized.append(
+                {
+                    "source_type": "unknown",
+                    "source_name": None,
+                    "source_content": str(source),
+                    "relevance_score": None,
+                    "timestamp": None,
+                }
+            )
     return serialized
 
 
@@ -75,6 +97,13 @@ def _serialize_threads(threads: list[dict]) -> list[ThreadSummary]:
 def _serialize_messages(messages: list) -> list[ChatMessage]:
     serialized = []
     for message in messages or []:
+        if isinstance(message, dict):
+            role = message.get("role")
+            content = str(message.get("content") or "").strip()
+            if role in {"user", "assistant"} and content:
+                serialized.append(ChatMessage(role=role, content=content))
+            continue
+
         message_type = getattr(message, "type", "")
         content = str(getattr(message, "content", "") or "").strip()
         if not content:
@@ -89,7 +118,17 @@ def _serialize_messages(messages: list) -> list[ChatMessage]:
 @app.get("/health")
 def health() -> dict:
     logger.info("health check")
-    return {"status": "ok", "app": settings.app_name}
+    return {"status": "ok", "app": settings.app_name, "redis": get_redis_health()}
+
+
+@app.get("/api/redis/health")
+def redis_health() -> dict:
+    return get_redis_health()
+
+
+@app.get("/api/mcp/call-logs")
+def mcp_call_logs(limit: int = Query(default=50, ge=1, le=200)) -> dict:
+    return {"items": list_mcp_call_logs(limit), "limit": limit}
 
 
 @app.post("/api/chat", response_model=ChatResponse)
@@ -149,9 +188,15 @@ def threads() -> list[ThreadSummary]:
 @app.get("/api/threads/{thread_id}", response_model=ThreadDetail)
 def thread_detail(thread_id: str) -> ThreadDetail:
     thread = get_thread(thread_id)
-    snapshot = graph.get_state(_graph_config(thread_id))
-    values = snapshot.values or {}
-    messages = _serialize_messages(values.get("messages", []))
+    values = {}
+    try:
+        snapshot = graph.get_state(_graph_config(thread_id))
+        values = snapshot.values or {}
+    except Exception:
+        logger.info("graph checkpoint state unavailable for thread_id=%s", thread_id)
+
+    raw_messages = values.get("messages", []) or (thread.get("messages", []) if thread else [])
+    messages = _serialize_messages(raw_messages)
     if not thread and not messages:
         raise HTTPException(status_code=404, detail="会话不存在")
 
