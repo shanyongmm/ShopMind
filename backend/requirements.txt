@@ -11,4 +11,7 @@ langgraph-checkpoint-postgres
 pymilvus
 dashscope
 requests
+redis>=5.0
 psycopg[binary]
+anyio>=4.5
+mcp[cli]<2

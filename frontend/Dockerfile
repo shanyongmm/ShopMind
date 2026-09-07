@@ -1,7 +1,9 @@
-FROM nginx:1.27-alpine
+FROM docker.m.daocloud.io/library/python:3.13-slim
 
-COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
-COPY frontend/ /usr/share/nginx/html/
+WORKDIR /app/frontend
+
+COPY frontend/ ./
 
 EXPOSE 80
 
+CMD ["python", "-m", "http.server", "80", "--bind", "0.0.0.0"]
